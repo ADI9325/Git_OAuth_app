@@ -208,7 +208,7 @@ Click **"Logout"** to end the session and return to the login page.
 
 ## 🎥 Video Demo
 
-🚀 Watch the screencast **[here](#)** (Replace with your link) to see:
+🚀 Watch the screencast **[here](#)** (https://drive.google.com/file/d/1UVWOMMapeJS2JpT9lyShd1K2Fyv9AhTt/view?usp=sharing) to see:
 
 - OAuth login flow
 - Repository selection
