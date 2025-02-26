@@ -1,4 +1,3 @@
-// components/BranchList.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -10,24 +9,29 @@ import {
   Box,
   useTheme,
 } from "@mui/material";
+import { useOutletContext } from "react-router-dom";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import { BASE_URL } from "../config";
-import AccountTreeIcon from "@mui/icons-material/AccountTree"; // Use this instead of GitBranchIcon
 
-const BranchList = ({ selectedRepos }) => {
+const BranchList = () => {
   const [branchesData, setBranchesData] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const theme = useTheme();
+  const { selectedRepos, setIsFetching } = useOutletContext() || {
+    selectedRepos: [],
+  };
 
   useEffect(() => {
     if (!selectedRepos || selectedRepos.length === 0) {
       setBranchesData({});
+      setIsFetching(false);
       return;
     }
 
     const fetchBranches = async () => {
       setLoading(true);
-      setError(null);
+      setIsFetching(true);
       const newBranchesData = {};
 
       try {
@@ -46,7 +50,6 @@ const BranchList = ({ selectedRepos }) => {
 
           newBranchesData[`${owner}/${repoName}`] = branchNames;
         }
-
         setBranchesData(newBranchesData);
       } catch (error) {
         console.error("Error fetching branches:", error);
@@ -57,18 +60,20 @@ const BranchList = ({ selectedRepos }) => {
         );
       } finally {
         setLoading(false);
+        setIsFetching(false);
+        console.log("Branches fetched, isFetching set to false");
       }
     };
 
     fetchBranches();
-  }, [selectedRepos]);
+  }, [selectedRepos, setIsFetching]);
 
   const hasBranches = Object.values(branchesData).some(
     (branches) => branches.length > 0
   );
 
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4, p: 2 }}>
       <Typography
         variant="h6"
         sx={{ mb: 2, fontWeight: 500, color: "text.primary" }}
@@ -87,7 +92,12 @@ const BranchList = ({ selectedRepos }) => {
         Object.values(branchesData).map((branches, index) => (
           <List
             key={index}
-            sx={{ bgcolor: "background.paper", borderRadius: 1, p: 0 }}
+            sx={{
+              bgcolor: "background.paper",
+              borderRadius: 1,
+              p: 0,
+              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+            }}
           >
             {branches.map((branch) => (
               <ListItem
@@ -97,7 +107,11 @@ const BranchList = ({ selectedRepos }) => {
                   px: 2,
                   borderBottom: `1px solid ${theme.palette.divider}`,
                   "&:last-child": { borderBottom: "none" },
-                  "&:hover": { bgcolor: "action.hover" },
+                  "&:hover": {
+                    bgcolor: "action.hover",
+                    transform: "translateX(4px)",
+                    transition: "all 0.2s ease",
+                  },
                 }}
               >
                 <Box

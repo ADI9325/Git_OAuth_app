@@ -1,4 +1,3 @@
-// pages/Login.js
 import React from "react";
 import {
   Container,
@@ -21,11 +20,11 @@ const Login = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh", // Full viewport height
+        minHeight: "100vh",
         display: "flex",
-        justifyContent: "center", // Center horizontally
-        alignItems: "center", // Center vertically
-        bgcolor: theme.palette.mode === "dark" ? "#161b22" : "#f6f8fa", // GitHub-like background
+        justifyContent: "center",
+        alignItems: "center",
+        bgcolor: theme.palette.mode === "dark" ? "#161b22" : "#f6f8fa",
       }}
     >
       <Container

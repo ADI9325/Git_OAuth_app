@@ -1,8 +1,7 @@
-// components/UserProfile.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box, Avatar, Typography, useTheme } from "@mui/material";
-import { BASE_URL } from "../config"; // Import the base URL
+import { BASE_URL } from "../config";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);

@@ -10,19 +10,17 @@ passport.use(
       callbackURL: "http://localhost:5000/auth/github/callback",
     },
     (accessToken, refreshToken, profile, done) => {
-      console.log("OAuth Access Token:", accessToken); // Debugging
-      console.log("GitHub Profile:", profile); // Debugging
+      console.log("OAuth Access Token:", accessToken);
+      console.log("GitHub Profile:", profile);
       return done(null, { profile, accessToken });
     }
   )
 );
 
-// ✅ Serialize user (store in session)
 passport.serializeUser((user, done) => {
   done(null, { profile: user.profile, accessToken: user.accessToken });
 });
 
-// ✅ Deserialize user (retrieve from session)
 passport.deserializeUser((user, done) => {
   done(null, user);
 });

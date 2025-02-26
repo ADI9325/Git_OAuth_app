@@ -1,11 +1,18 @@
-// App.js
 import React, { useState, useMemo } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import PullRequestList from "./components/PullRequestList";
+import IssueList from "./components/IssueList";
+import BranchList from "./components/BranchList";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import { amber, grey } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import { ColorModeContext } from "./context/ColorModeContext";
 
 function App() {
@@ -28,32 +35,41 @@ function App() {
           mode,
           ...(mode === "light"
             ? {
-                // palette values for light mode (unchanged)
-                primary: amber,
-                divider: amber[200],
+                primary: {
+                  main: "#0366d6",
+                },
+                background: {
+                  default: "#f6f8fa",
+                  paper: "#ffffff",
+                },
                 text: {
                   primary: grey[900],
-                  secondary: grey[800],
+                  secondary: grey[600],
+                },
+                divider: "#e1e4e8",
+                action: {
+                  active: "#0366d6",
+                  hover: "rgba(3, 102, 214, 0.08)",
+                  selected: "rgba(3, 102, 214, 0.16)",
                 },
               }
             : {
-                // palette values for black and white dark mode
                 primary: {
-                  main: "#ffffff", // White
+                  main: "#ffffff",
                 },
                 background: {
-                  default: "#000000", // Black
-                  paper: "#000000", // Black
+                  default: "#0d1117",
+                  paper: "#161b22",
                 },
                 text: {
-                  primary: "#ffffff", // White
-                  secondary: grey[400], // Light grey for secondary text
+                  primary: "#ffffff",
+                  secondary: grey[400],
                 },
-                divider: grey[800], // Dark grey for dividers
+                divider: grey[800],
                 action: {
-                  active: "#ffffff", // White for active elements
-                  hover: "rgba(255, 255, 255, 0.08)", // Slight white overlay for hover
-                  selected: "rgba(255, 255, 255, 0.16)", // Slightly stronger for selected
+                  active: "#ffffff",
+                  hover: "rgba(255, 255, 255, 0.08)",
+                  selected: "rgba(255, 255, 255, 0.16)",
                 },
               }),
         },
@@ -61,7 +77,7 @@ function App() {
           MuiButton: {
             styleOverrides: {
               root: {
-                borderRadius: 8,
+                borderRadius: 4,
                 textTransform: "none",
                 ...(mode === "dark" && {
                   borderColor: "#ffffff",
@@ -79,6 +95,14 @@ function App() {
               },
             },
           },
+          MuiAppBar: {
+            styleOverrides: {
+              root: {
+                backgroundColor: mode === "dark" ? "#0d1117" : "#ffffff",
+                boxShadow: "0 1px 0 rgba(0, 0, 0, 0.1)",
+              },
+            },
+          },
         },
       }),
     [mode]
@@ -91,7 +115,22 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/*" element={<Dashboard />}>
+              <Route path="" element={<Navigate to="code" />} />
+              <Route
+                path="code"
+                element={<PullRequestList selectedRepos={[]} />}
+              />
+              <Route
+                path="pull-requests"
+                element={<PullRequestList selectedRepos={[]} />}
+              />
+              <Route path="issues" element={<IssueList selectedRepos={[]} />} />
+              <Route
+                path="branches"
+                element={<BranchList selectedRepos={[]} />}
+              />
+            </Route>
           </Routes>
         </Router>
       </ThemeProvider>

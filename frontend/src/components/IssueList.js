@@ -1,4 +1,3 @@
-// components/IssueList.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -11,21 +10,27 @@ import {
   useTheme,
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useOutletContext } from "react-router-dom";
 import { BASE_URL } from "../config";
 
-const IssueList = ({ selectedRepos }) => {
+const IssueList = () => {
   const [issues, setIssues] = useState({});
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
+  const { selectedRepos, setIsFetching } = useOutletContext() || {
+    selectedRepos: [],
+  };
 
   useEffect(() => {
     if (!selectedRepos || selectedRepos.length === 0) {
       setIssues({});
+      setIsFetching(false);
       return;
     }
 
     const fetchIssues = async () => {
       setLoading(true);
+      setIsFetching(true);
       const newIssues = {};
 
       try {
@@ -41,18 +46,19 @@ const IssueList = ({ selectedRepos }) => {
         console.error("Error fetching issues:", err);
       } finally {
         setLoading(false);
+        setIsFetching(false);
       }
     };
 
     fetchIssues();
-  }, [selectedRepos]);
+  }, [selectedRepos, setIsFetching]);
 
   const hasIssues = Object.values(issues).some(
     (issuesList) => issuesList.length > 0
   );
 
   return (
-    <Box sx={{ mb: 4 }}>
+    <Box sx={{ mb: 4, p: 2 }}>
       <Typography
         variant="h6"
         sx={{ mb: 2, fontWeight: 500, color: "text.primary" }}
@@ -69,7 +75,12 @@ const IssueList = ({ selectedRepos }) => {
         Object.values(issues).map((issuesList, index) => (
           <List
             key={index}
-            sx={{ bgcolor: "background.paper", borderRadius: 1, p: 0 }}
+            sx={{
+              bgcolor: "background.paper",
+              borderRadius: 1,
+              p: 0,
+              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+            }}
           >
             {issuesList.map((issue) => (
               <ListItem
@@ -79,7 +90,11 @@ const IssueList = ({ selectedRepos }) => {
                   px: 2,
                   borderBottom: `1px solid ${theme.palette.divider}`,
                   "&:last-child": { borderBottom: "none" },
-                  "&:hover": { bgcolor: "action.hover" },
+                  "&:hover": {
+                    bgcolor: "action.hover",
+                    transform: "translateX(4px)",
+                    transition: "all 0.2s ease",
+                  },
                 }}
               >
                 <ListItemText
@@ -90,7 +105,13 @@ const IssueList = ({ selectedRepos }) => {
                         label={issue.state}
                         size="small"
                         color={issue.state === "open" ? "success" : "default"}
-                        sx={{ ml: 1, height: 20 }}
+                        sx={{
+                          ml: 1,
+                          height: 20,
+                          bgcolor:
+                            issue.state === "open" ? "#2da44e" : "#6a737d",
+                          color: "#ffffff",
+                        }}
                       />
                     </>
                   }
