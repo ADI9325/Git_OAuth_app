@@ -4,7 +4,7 @@ A **full-stack GitHub OAuth application** that allows users to authenticate via 
 
 ## 📂 Repository
 
-[GitHub: ADI9325/Git_auth_app](https://github.com/ADI9325/Git_auth_app)
+[GitHub: ADI9325/Git_auth_app](https://github.com/ADI9325/Git_OAuth_app)
 
 ## 🚀 Features
 
